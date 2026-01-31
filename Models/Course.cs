@@ -5,6 +5,7 @@
         public int ID { get; set; }
         public string Name { get; set; }
         public int Houres { get; set; }
-      public ICollection<Exam> Exams { get; set; }
+        public bool IsDeleted { get; set; }
+        public ICollection<Exam> Exams { get; set; }
     }
 }

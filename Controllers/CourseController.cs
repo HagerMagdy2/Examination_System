@@ -26,13 +26,13 @@ namespace Examination_System.Controllers
         [HttpGet]
         public List<Course> GetAllCourses()
         {
-            return _context.Courses.ToList();
+            return _context.Courses.Include(x=>x.Exams.Select(x=>x.Name)).Where(c=>!c.IsDeleted).ToList();
         }
         [HttpGet]
         public async Task<Course>  GetNameById(int id)
         {
             
-                var course = await _context.Courses.Where(c => c.ID == id).FirstOrDefaultAsync();
+                var course = await _context.Courses.Where(c => c.ID == id&& !c.IsDeleted).FirstOrDefaultAsync();
 
                 return course;
             
@@ -41,8 +41,8 @@ namespace Examination_System.Controllers
         public async Task< bool> DeleteCourse(int id)
         {
             var course = await _context.Courses.FindAsync(id);
-          
-                _context.Courses.Remove(course);
+
+            course.IsDeleted = true;
                await _context.SaveChangesAsync();
                 return true;
          
