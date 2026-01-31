@@ -1,10 +1,9 @@
 ﻿namespace Examination_System.Models
 {
-    public class Course
+    public class Exam
     {
         public int ID { get; set; }
         public string Name { get; set; }
-        public int Houres { get; set; }
-      public ICollection<Exam> Exams { get; set; }
+        public Course Course { get; set; }
     }
 }
