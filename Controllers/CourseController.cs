@@ -55,6 +55,13 @@ namespace Examination_System.Controllers
                 return true;
          
         }
+        [HttpPut]
+        public bool Update(Course course)
+        {
+            _courseRepository.UpdateInclude(course, nameof(Course.Name),nameof(Course.Houres));
+            return true;
+
+        }
     }
 }
 

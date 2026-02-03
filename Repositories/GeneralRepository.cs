@@ -36,6 +36,10 @@ namespace Examination_System.Repositories
         }
         public void UpdateInclude( T entity,params string[] modifiedProperties)
         {
+            if (_dbSet.Any(x=>x.ID==entity.ID))
+            {
+                return;
+            }
             var local=_dbSet.Local.FirstOrDefault(x=>x.ID==entity.ID);
             EntityEntry entityEntry;
             if (local == null)
