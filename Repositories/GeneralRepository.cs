@@ -1,6 +1,7 @@
 ﻿using Examination_System.Data;
 using Examination_System.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.ChangeTracking;
 
 namespace Examination_System.Repositories
 {
@@ -32,6 +33,30 @@ namespace Examination_System.Repositories
             course.IsDelected = true;
             await _context.SaveChangesAsync();
             
+        }
+        public void UpdateInclude( T entity,params string[] modifiedProperties)
+        {
+            var local=_dbSet.Local.FirstOrDefault(x=>x.ID==entity.ID);
+            EntityEntry entityEntry;
+            if (local == null)
+            {
+                entityEntry = _context.Entry(entity);
+            }
+            else
+            {
+                entityEntry=_context.ChangeTracker.Entries<T>().FirstOrDefault(x=>x.Entity.ID==entity.ID);
+
+            }
+            foreach (var property in entityEntry.Properties)
+            {
+                if (modifiedProperties.Contains(property.Metadata.Name))
+                {
+                    property.CurrentValue = entity.GetType().GetProperty(property.Metadata.Name).GetValue(entity);
+                    property.IsModified = true;
+                }
+
+            }
+            _context.SaveChanges();
         }
     }
 }
