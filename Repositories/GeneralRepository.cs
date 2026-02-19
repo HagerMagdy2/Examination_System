@@ -2,6 +2,7 @@
 using Examination_System.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
+using System.Linq.Expressions;
 
 namespace Examination_System.Repositories
 {
@@ -17,6 +18,11 @@ namespace Examination_System.Repositories
         public IQueryable<T> GetAll()
         {
             return _dbSet.Where(x => !x.IsDelected);
+        }
+        public IQueryable<T> Get(Expression<Func<T,bool>> expression)
+        {
+            var res =GetAll().Where(expression);
+            return res;
         }
         public async Task<T> GetById(int id)
         {

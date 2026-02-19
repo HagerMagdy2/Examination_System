@@ -34,6 +34,12 @@ namespace Examination_System.Controllers
 
         }
         [HttpGet]
+        public IEnumerable<Course> GetCourseWithFilters()
+        {
+            // return _context.Courses.Where(c => c.Name.Contains(name) && !c.IsDeleted).ToList();
+            return _courseRepository.Get(x => x.Name.Contains("C#"));
+        }
+        [HttpGet]
         public async Task<Course>  GetNameById(int id)
         {
             var course= await _courseRepository.GetById(id);
