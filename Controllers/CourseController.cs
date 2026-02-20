@@ -4,6 +4,8 @@ using Examination_System.Repositories;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using PredicateExtensions;
+using System.Linq.Expressions;
 
 namespace Examination_System.Controllers
 {
@@ -38,6 +40,59 @@ namespace Examination_System.Controllers
         {
             // return _context.Courses.Where(c => c.Name.Contains(name) && !c.IsDeleted).ToList();
             return _courseRepository.Get(x => x.Name.Contains("C#"));
+        }
+        [HttpGet]
+        public IEnumerable<Course> Get(int? Id,string? Name, int?Houres)
+
+        {
+            //the old way before using predicate check for all filters and then apply them to the query 
+            //var query = _courseRepository.GetAll();
+            //if (Id.HasValue)
+            //{
+            //    query= query.Where(x => x.ID == Id.Value);
+            //}
+            //if (Houres.HasValue)
+            //{
+            //    query = query.Where(x => x.Houres > Houres.Value);
+            //}
+            //if (!string.IsNullOrEmpty(Name)) 
+            //{
+            //query=query.Where(x => x.Name.Contains(Name));
+            //}
+            // return _context.Courses.Where(c => c.Houres > houres && !c.IsDeleted).ToList();
+            //var predicate = PredicateExtensions.PredicateExtensions.Begin<Course>(true);
+            //if (Id.HasValue)
+            //{
+            //    predicate = predicate.And(x => x.ID == Id.Value);
+            //}
+            //if (Houres.HasValue)
+            //{
+            //    predicate = predicate.And(x => x.Houres > Houres.Value);
+            //}
+            //if (!string.IsNullOrEmpty(Name))
+            //{
+            //    predicate = predicate.And(x => x.Name.Contains(Name));
+            //}
+            var predicate = MyPredicateBuilder(Id, Name, Houres);
+            var query=  _courseRepository.Get(predicate);
+            return query;
+        }
+        private Expression<Func<Course, bool>> MyPredicateBuilder(int? Id, string? Name, int? Houres)
+        {
+            var predicate = PredicateExtensions.PredicateExtensions.Begin<Course>(true);
+            if (Id.HasValue)
+            {
+                predicate = predicate.And(x => x.ID == Id.Value);
+            }
+            if (Houres.HasValue)
+            {
+                predicate = predicate.And(x => x.Houres > Houres.Value);
+            }
+            if (!string.IsNullOrEmpty(Name))
+            {
+                predicate = predicate.And(x => x.Name.Contains(Name));
+            }
+            return predicate;
         }
         [HttpGet]
         public async Task<Course>  GetNameById(int id)
