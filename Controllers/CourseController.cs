@@ -74,7 +74,7 @@ namespace Examination_System.Controllers
             //    predicate = predicate.And(x => x.Name.Contains(Name));
             //}
             var predicate = MyPredicateBuilder(Id, Name, Houres);
-            var query=  _courseRepository.Get(predicate);
+            var query=  _courseRepository.Get(predicate).ToList();
             return query;
         }
         private Expression<Func<Course, bool>> MyPredicateBuilder(int? Id, string? Name, int? Houres)
@@ -86,7 +86,7 @@ namespace Examination_System.Controllers
             }
             if (Houres.HasValue)
             {
-                predicate = predicate.And(x => x.Houres > Houres.Value);
+                predicate = predicate.And(x => x.Houres >= Houres.Value);
             }
             if (!string.IsNullOrEmpty(Name))
             {
