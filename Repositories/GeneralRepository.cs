@@ -17,7 +17,7 @@ namespace Examination_System.Repositories
         }
         public IQueryable<T> GetAll()
         {
-            return _dbSet.Where(x => !x.IsDelected);
+            return _dbSet.Where(x => !x.IsDeleted);
         }
         public IQueryable<T> Get(Expression<Func<T,bool>> expression)
         {
@@ -26,7 +26,7 @@ namespace Examination_System.Repositories
         }
         public async Task<T> GetById(int id)
         {
-            return await _dbSet.Where(x => x.ID == id && !x.IsDelected).FirstOrDefaultAsync();
+            return await _dbSet.Where(x => x.ID == id && !x.IsDeleted).FirstOrDefaultAsync();
         }
         //public async Task AddCourse(Course course)
         //{
@@ -36,7 +36,7 @@ namespace Examination_System.Repositories
         public async Task DeleteCourse(int id)
         {
             var course = await GetById(id);
-            course.IsDelected = true;
+            course.IsDeleted = true;
             await _context.SaveChangesAsync();
             
         }

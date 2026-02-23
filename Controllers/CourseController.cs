@@ -86,7 +86,7 @@ namespace Examination_System.Controllers
             }
             if (Houres.HasValue)
             {
-                predicate = predicate.And(x => x.Houres >= Houres.Value);
+                predicate = predicate.And(x => x.Hours >= Houres.Value);
             }
             if (!string.IsNullOrEmpty(Name))
             {
@@ -119,7 +119,7 @@ namespace Examination_System.Controllers
         [HttpPut]
         public bool Update(Course course)
         {
-            _courseRepository.UpdateInclude(course, nameof(Course.Name),nameof(Course.Houres));
+            _courseRepository.UpdateInclude(course, nameof(Course.Name),nameof(Course.Hours));
             return true;
 
         }
