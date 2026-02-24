@@ -1,6 +1,9 @@
 ﻿using Examination_System.Data;
+using Examination_System.DTOs;
 using Examination_System.Models;
 using Examination_System.Repositories;
+using Examination_System.Services;
+using Examination_System.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -15,10 +18,12 @@ namespace Examination_System.Controllers
     {
         //Context _context;
         GeneralRepository<Course> _courseRepository;
+        UpdateCoursseRequestDTO _courseService;
         public CourseController()
         {
             //_context = new Context();
             _courseRepository = new GeneralRepository<Course>();
+            _courseService = new UpdateCoursseRequestDTO();
         }
         //[HttpPost]
         //public bool AddCourse(Course course)
@@ -32,7 +37,7 @@ namespace Examination_System.Controllers
         public  IEnumerable<Course> GetAllCourses()
         {
             // return _context.Courses.Include(x=>x.Exams.Select(x=>x.Name)).Where(c=>!c.IsDeleted).ToList();
-            return  _courseRepository.GetAll();
+            return  _courseService.GetAll();
 
         }
         [HttpGet]
@@ -117,10 +122,15 @@ namespace Examination_System.Controllers
          
         }
         [HttpPut]
-        public bool Update(Course course)
+        public bool Update(UpdateCoursseRequestViewModel course)
         {
-            _courseRepository.UpdateInclude(course, nameof(Course.Name),nameof(Course.Hours));
-            return true;
+            var crs = new UpdateCourseRequestDTO()
+            {
+                Name=course.Name,
+                Hours=course.Hours,
+            };
+            _courseService.UpdateCourse(crs);
+                return true;
 
         }
     }

@@ -40,6 +40,16 @@ namespace Examination_System.Repositories
             await _context.SaveChangesAsync();
             
         }
+        public async Task Add(T entity)
+        {
+            _dbSet.Add(entity);
+            await _context.SaveChangesAsync();
+        }
+        public async Task Update(T entity)
+        {
+            _context.Update(entity);
+            await _context.SaveChangesAsync();
+        }
         public void UpdateInclude( T entity,params string[] modifiedProperties)
         {
             if (_dbSet.Any(x=>x.ID==entity.ID))
