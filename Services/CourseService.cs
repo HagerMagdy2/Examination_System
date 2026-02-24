@@ -1,4 +1,6 @@
 ﻿using Examination_System.DTOs;
+using Examination_System.DTOs.Course;
+using Examination_System.DTOs.Instructor;
 using Examination_System.Models;
 using Examination_System.Repositories;
 
@@ -11,10 +13,23 @@ namespace Examination_System.Services
         {
             _generalRepository = new GeneralRepository<Course>();
         }
-        public IEnumerable<Course> GetAll()
+        public IEnumerable<GetAllCoursesDTO> GetAll()
         {
             //Add Validation here if needed
-            return _generalRepository.GetAll().ToList();
+            var res = _generalRepository.GetAll().Select(c => new GetAllCoursesDTO()
+            {
+                ID = c.ID,
+                Name = c.Name,
+                Description = c.Description,
+                Instructor = new GetInstructorInfoDTO
+                {
+                    ID = c.Instructor.ID,
+                    Name = c.Instructor.FullName,
+                }
+            }).ToList();
+
+            
+            return res;
         }
         public async Task<Course> GetById(int id)
         {

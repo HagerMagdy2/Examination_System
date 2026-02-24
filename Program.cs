@@ -1,4 +1,7 @@
 
+using Examination_System.DTOs.Course;
+using Microsoft.Extensions.DependencyInjection;
+
 namespace Examination_System
 {
     public class Program
@@ -13,7 +16,7 @@ namespace Examination_System
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
             builder.Services.AddEndpointsApiExplorer();
             builder.Services.AddSwaggerGen();
-
+            builder.Services.AddAutoMapper(typeof(CourseProfile).Assembly);
             var app = builder.Build();
 
             // Configure the HTTP request pipeline.

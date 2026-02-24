@@ -4,6 +4,8 @@ using Examination_System.Models;
 using Examination_System.Repositories;
 using Examination_System.Services;
 using Examination_System.ViewModels;
+using Examination_System.ViewModels.Course;
+using Examination_System.ViewModels.Instructor;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -34,10 +36,27 @@ namespace Examination_System.Controllers
 
         //}
         [HttpGet]
-        public  IEnumerable<Course> GetAllCourses()
+        public  IEnumerable<GetAllCoursesViewModel> GetAllCourses()
         {
             // return _context.Courses.Include(x=>x.Exams.Select(x=>x.Name)).Where(c=>!c.IsDeleted).ToList();
-            return  _courseService.GetAll();
+            var res=  _courseService.GetAll();
+            var list =new List<GetAllCoursesViewModel>();
+            foreach (var item in res) 
+            {
+                list.Add(new GetAllCoursesViewModel()
+                {
+                    ID = item.ID,
+                    Name = item.Name,
+                    Description = item.Description,
+                    Instructor = new GetInstructorInfoViewModel
+                    {
+                        ID = item.Instructor.ID,
+                        Name = item.Instructor.Name,
+                    }
+                });
+
+            }
+            return list;
 
         }
         [HttpGet]
