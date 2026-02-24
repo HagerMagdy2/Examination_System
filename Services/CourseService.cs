@@ -14,7 +14,7 @@ namespace Examination_System.Services
         public IEnumerable<Course> GetAll()
         {
             //Add Validation here if needed
-            return _generalRepository.GetAll();
+            return _generalRepository.GetAll().ToList();
         }
         public async Task<Course> GetById(int id)
         {
