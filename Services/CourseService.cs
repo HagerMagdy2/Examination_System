@@ -1,4 +1,6 @@
-﻿using Examination_System.DTOs;
+﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
+using Examination_System.DTOs;
 using Examination_System.DTOs.Course;
 using Examination_System.DTOs.Instructor;
 using Examination_System.Models;
@@ -6,29 +8,21 @@ using Examination_System.Repositories;
 
 namespace Examination_System.Services
 {
-    public class UpdateCoursseRequestDTO
+    public class CourseService
     {
         GeneralRepository<Course> _generalRepository;
-        public UpdateCoursseRequestDTO()
+        IMapper _mapper;
+        public CourseService( IMapper mapper)
         {
             _generalRepository = new GeneralRepository<Course>();
+            _mapper = mapper;
         }
         public IEnumerable<GetAllCoursesDTO> GetAll()
         {
             //Add Validation here if needed
-            var res = _generalRepository.GetAll().Select(c => new GetAllCoursesDTO()
-            {
-                ID = c.ID,
-                Name = c.Name,
-                Description = c.Description,
-                Instructor = new GetInstructorInfoDTO
-                {
-                    ID = c.Instructor.ID,
-                    Name = c.Instructor.FullName,
-                }
-            }).ToList();
+            var query = _generalRepository.GetAll();
 
-            
+            var res = query.ProjectTo<GetAllCoursesDTO>(_mapper.ConfigurationProvider).ToList();
             return res;
         }
         public async Task<Course> GetById(int id)

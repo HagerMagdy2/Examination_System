@@ -1,4 +1,5 @@
-﻿using Examination_System.Data;
+﻿using AutoMapper;
+using Examination_System.Data;
 using Examination_System.DTOs;
 using Examination_System.Models;
 using Examination_System.Repositories;
@@ -20,12 +21,14 @@ namespace Examination_System.Controllers
     {
         //Context _context;
         GeneralRepository<Course> _courseRepository;
-        UpdateCoursseRequestDTO _courseService;
-        public CourseController()
+        CourseService _courseService;
+        IMapper _mapper;
+        public CourseController(IMapper mapper)
         {
             //_context = new Context();
             _courseRepository = new GeneralRepository<Course>();
-            _courseService = new UpdateCoursseRequestDTO();
+            _courseService = new CourseService( mapper);
+            _mapper = mapper;
         }
         //[HttpPost]
         //public bool AddCourse(Course course)
@@ -40,22 +43,23 @@ namespace Examination_System.Controllers
         {
             // return _context.Courses.Include(x=>x.Exams.Select(x=>x.Name)).Where(c=>!c.IsDeleted).ToList();
             var res=  _courseService.GetAll();
-            var list =new List<GetAllCoursesViewModel>();
-            foreach (var item in res) 
-            {
-                list.Add(new GetAllCoursesViewModel()
-                {
-                    ID = item.ID,
-                    Name = item.Name,
-                    Description = item.Description,
-                    Instructor = new GetInstructorInfoViewModel
-                    {
-                        ID = item.Instructor.ID,
-                        Name = item.Instructor.Name,
-                    }
-                });
+            //var list =new List<GetAllCoursesViewModel>();
+            //foreach (var item in res) 
+            //{
+            //    list.Add(new GetAllCoursesViewModel()
+            //    {
+            //        ID = item.ID,
+            //        Name = item.Name,
+            //        Description = item.Description,
+            //        Instructor = new GetInstructorInfoViewModel
+            //        {
+            //            ID = item.Instructor.ID,
+            //            Name = item.Instructor.Name,
+            //        }
+            //    });
 
-            }
+            //}
+            var list = _mapper.Map<IEnumerable<GetAllCoursesViewModel>>(res);
             return list;
 
         }
